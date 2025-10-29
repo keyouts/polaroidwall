@@ -7,10 +7,9 @@ function saveToLocalStorage() {
   localStorage.setItem('polaroids', JSON.stringify(polaroids));
 }
 
-function createPolaroid(images = [], note = '', id = null, top = 0, left = 0) {
+function createPolaroid(images = [], note = '', id = null, top = 50, left = 50) {
   const polaroid = document.createElement('div');
   polaroid.className = 'polaroid';
-  polaroid.style.position = 'absolute';
   polaroid.style.top = `${top}px`;
   polaroid.style.left = `${left}px`;
 
@@ -31,7 +30,6 @@ function createPolaroid(images = [], note = '', id = null, top = 0, left = 0) {
   if (images.length > 1) {
     const prev = document.createElement('button');
     prev.textContent = '<';
-    prev.className = 'brutalist-btn';
     prev.onclick = () => {
       index = (index - 1 + images.length) % images.length;
       img.src = images[index];
@@ -39,7 +37,6 @@ function createPolaroid(images = [], note = '', id = null, top = 0, left = 0) {
 
     const next = document.createElement('button');
     next.textContent = '>';
-    next.className = 'brutalist-btn';
     next.onclick = () => {
       index = (index + 1) % images.length;
       img.src = images[index];
@@ -102,6 +99,7 @@ function createPolaroid(images = [], note = '', id = null, top = 0, left = 0) {
     offsetX = e.clientX - polaroid.offsetLeft;
     offsetY = e.clientY - polaroid.offsetTop;
     polaroid.style.cursor = 'grabbing';
+    polaroid.classList.add('dragging');
   });
 
   document.addEventListener('mousemove', e => {
@@ -114,6 +112,7 @@ function createPolaroid(images = [], note = '', id = null, top = 0, left = 0) {
     if (!isDragging) return;
     isDragging = false;
     polaroid.style.cursor = 'grab';
+    polaroid.classList.remove('dragging');
     polaroidData.top = polaroid.offsetTop;
     polaroidData.left = polaroid.offsetLeft;
     const index = polaroids.findIndex(p => p.id === polaroidData.id);
